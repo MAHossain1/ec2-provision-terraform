@@ -1,0 +1,12 @@
+.terraform/*
+
+#tf state files
+*.tfstate
+*.tfstate.*
+
+
+# tf variables files, may contain sensitive data
+*.tfvars
+
+
+.vscode
