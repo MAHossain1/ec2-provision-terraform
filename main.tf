@@ -7,6 +7,7 @@ variable env_prefix {}
 variable my_ip {}
 variable instance_type {}
 variable public_key_location {}
+variable private_key_location {}
 
 resource "aws_vpc" "myapp-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -168,6 +169,32 @@ resource "aws_instance" "myapp-server" {
 
     user_data = file("entry-script.sh")
 
+    /* not recommended
+
+       # Connection block: defines how Terraform connects to the EC2 instance for provisioning.
+    connection {
+        type       = "ssh"  # Use SSH for connection
+        host       = self.public_ip  # Connect to the instance's public IP
+        user       = "ec2-user"  # Default user for Amazon Linux
+        private_key = file(var.private_key_location)  # Path to your private SSH key
+    }
+
+    # File provisioner: uploads a local script to the EC2 instance.
+    provisioner "file" {
+        source      = "entry-script.sh"  # Local script to upload
+        destination = "/home/ec2-user/entry-script-on-ec2.sh"  # Destination path on the instance
+    }
+
+    # Remote-exec provisioner: runs a script on the EC2 instance after upload.
+    provisioner "remote-exec" {
+        script = file("entry-script-on-ec2.sh")  # Script to execute on the instance
+    }
+
+    # Local-exec provisioner: runs a command locally on your machine after instance creation.
+    provisioner "local-exec" {
+        command = "echo ${self.public_ip} > output.txt"  # Save the instance's public IP to a
+
+    */
 
     tags = {
         Name = "${var.env_prefix}-server"
